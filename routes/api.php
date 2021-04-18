@@ -15,6 +15,4 @@ use App\Http\Controllers\TodolistsController;
 |
 */
 
-Route::post('/', [TodolistsController::class, 'post']);
-Route::put('/', [TodolistsController::class, 'put']);
-Route::delete('/', [TodolistsController::class, 'delete']);
+Route::apiResource('/todolists', TodolistsController::class);

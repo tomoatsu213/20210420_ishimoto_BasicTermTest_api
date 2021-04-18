@@ -2,40 +2,103 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Todolist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TodolistsController extends Controller
 {
-    public function post(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        $param = [
-            "todo" => $request->todo,
-        ];
-        DB::table('todolists')->insert($param);
+        $items = Todolist::all();
         return response()->json([
-            'message' => 'Todo created successfully',
-            'data' => $param
+            'message' => 'OK',
+            'data' => $items
         ], 200);
     }
 
-    public function put(Request $request)
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
     {
-        $param = [
-            "todo" => $request->todo,
-        ];
-        DB::table('todolists')->where('todo', $request->todo)->update($param);
+        $item = new Todolist;
+        $item->todo = $request->todo;
+        $item->save();
         return response()->json([
-            'message' => 'Todo updated successfully',
-            'data' => $param
+            'message' => 'Todo Created successfully',
+            'data' => $item
         ], 200);
     }
 
-    public function delete(Request $request)
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Todolist  $todolist
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Todolist $todolist)
     {
-        DB::table('todolists')->where('todo', $request->todo)->delete();
-        return response()->json([
-            'message' => 'Todo deleted successfully',
-        ], 200);
+        $item = Todolist::where('id', $todolist->id)->first();
+        if ($item) {
+            return response()->json([
+                'message' => 'OK',
+                'data' => $item
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Todolist  $todolist
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Todolist $todolist)
+    {
+        $item = Todolist::where('id', $todolist->id)->first();
+        $item->todo = $request->todo;
+        $item->save();
+        if ($item) {
+            return response()->json([
+                'message' => 'Todo Updated successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Todolist  $todolist
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Todolist $todolist)
+    {
+        $item = Todolist::where('id', $todolist->id)->delete();
+        if ($item) {
+            return response()->json([
+                'message' => 'Todo Deleted successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Not found',
+            ], 404);
+        }
     }
 }
