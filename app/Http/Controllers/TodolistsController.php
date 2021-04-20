@@ -45,19 +45,9 @@ class TodolistsController extends Controller
      * @param  \App\Models\Todolist  $todolist
      * @return \Illuminate\Http\Response
      */
-    public function show(Todolist $todolist)
+    public function show()
     {
-        $item = Todolist::where('id', $todolist->id)->first();
-        if ($item) {
-            return response()->json([
-                'message' => 'OK',
-                'data' => $item
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Not found',
-            ], 404);
-        }
+        //
     }
     /**
      * Update the specified resource in storage.
